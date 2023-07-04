@@ -21,5 +21,7 @@ func Test_Interval(t *testing.T) {
 
 func Test_FromChannel(t *testing.T) {
 	obs := NewObsFromEventSource()
+	DoOnCompleted(obs)
 	Observe(obs.Take(5))
+	time.Sleep(time.Second * 5)
 }
