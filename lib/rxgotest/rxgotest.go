@@ -15,6 +15,16 @@ func NewObsFromInterval() rxgo.Observable {
 	return rxgo.Interval(rxgo.WithDuration(time.Second))
 }
 
+func NewObsFromEventSource() rxgo.Observable {
+	ch := make(chan rxgo.Item)
+	obs := NewObsFromInterval()
+	obs.DoOnNext(
+		func(i interface{}) {
+			ch <- rxgo.Of(i)
+		},
+	)
+	return rxgo.FromEventSource(ch)
+}
 func Observe(obs rxgo.Observable) {
 	for item := range obs.Observe() {
 		log.Println(item)
@@ -30,4 +40,12 @@ func OnNext(obs rxgo.Observable) {
 			log.Println("OnNext", i)
 		})
 
+}
+
+func DoOnCompleted(obs rxgo.Observable) {
+	obs.DoOnCompleted(
+		func() {
+			log.Print("DoOnCompleted")
+		},
+	)
 }

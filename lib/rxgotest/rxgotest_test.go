@@ -14,6 +14,12 @@ func Test_just(t *testing.T) {
 func Test_Interval(t *testing.T) {
 	obs := NewObsFromInterval()
 	OnNext(obs)
+	DoOnCompleted(obs)
 	Observe(obs.Take(5))
 	time.Sleep(time.Second * 5)
+}
+
+func Test_FromChannel(t *testing.T) {
+	obs := NewObsFromEventSource()
+	Observe(obs.Take(5))
 }
