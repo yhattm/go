@@ -1,6 +1,7 @@
 package rxgotest
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -18,11 +19,18 @@ func NewObsFromInterval() rxgo.Observable {
 func NewObsFromEventSource() rxgo.Observable {
 	ch := make(chan rxgo.Item)
 	obs := NewObsFromInterval()
+	ctx, cancel := context.WithCancel(context.Background())
 	obs.DoOnNext(
 		func(i interface{}) {
 			ch <- rxgo.Of(i)
 		},
+		rxgo.WithContext(ctx),
 	)
+	go func() {
+		<-time.After(time.Second * 3)
+		cancel()
+		close(ch)
+	}()
 	return rxgo.FromEventSource(ch)
 }
 func Observe(obs rxgo.Observable) {
