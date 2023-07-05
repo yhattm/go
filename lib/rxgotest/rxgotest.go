@@ -34,10 +34,10 @@ func Observe(obs rxgo.Observable) {
 	}
 }
 
-func OnNext(obs rxgo.Observable) {
+func DoOnNext(obs rxgo.Observable) {
 	obs.DoOnNext(
 		func(i interface{}) {
-			log.Println("OnNext", i)
+			log.Println("DoOnNext", i)
 		})
 
 }

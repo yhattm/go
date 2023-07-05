@@ -2,7 +2,6 @@ package rxgotest
 
 import (
 	"context"
-	"log"
 	"testing"
 	"time"
 
@@ -11,28 +10,23 @@ import (
 
 func Test_just(t *testing.T) {
 	obs := NewObsFromJust()
-	OnNext(obs)
+	DoOnNext(obs)
 	Observe(obs)
 }
 
 func Test_Interval(t *testing.T) {
 	obs := NewObsFromInterval()
-	OnNext(obs)
+	DoOnNext(obs)
 	DoOnCompleted(obs)
 	Observe(obs.Take(5))
 	time.Sleep(time.Second * 5)
 }
 
-func Test_OnNext(t *testing.T) {
+func Test_DoOnNext(t *testing.T) {
 	obs := NewObsFromInterval()
 	ctx, cancel := context.WithCancel(context.Background())
-	obs.DoOnNext(
-		func(i interface{}) {
-			log.Println("OnNext", i)
-		},
-		rxgo.WithContext(ctx),
-	)
-	OnNext(obs)
+	obs = obs.Take(10, rxgo.WithContext(ctx))
+	DoOnNext(obs)
 	DoOnCompleted(obs)
 	time.Sleep(time.Second * 5)
 	cancel()
