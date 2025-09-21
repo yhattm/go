@@ -1,6 +1,6 @@
-module go
+module github.com/yhattm/go
 
-go 1.20
+go 1.23
 
 require github.com/reactivex/rxgo/v2 v2.5.0
 
